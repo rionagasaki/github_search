@@ -26,7 +26,7 @@ struct SearchActionCreater{
                 if httpResponse.statusCode != 200 { return }
                 let decoder = JSONDecoder()
                 decoder.keyDecodingStrategy = .convertFromSnakeCase
-                let result = try? decoder.decode(GetRepositoryInfo.Response.self, from: data)
+                let result = try? decoder.decode(SearchResult.self, from: data)
                 guard let result = result else { return }
                 appStore.dispatchSearchAction(.searchButton_clicked(result))
             } onError: { error in
@@ -34,10 +34,6 @@ struct SearchActionCreater{
             }.disposed(by: disposeBag)
         }
     }
-}
-
-public struct GetRepositoryInfo: EndpointProtcol{
-    public typealias Response = SearchResult
 }
 
 
