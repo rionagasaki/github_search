@@ -75,16 +75,16 @@ class SearchViewController: UITableViewController, UISearchBarDelegate {
     
     private let emptyLabel:UILabel = {
         let label = UILabel()
-        let string = NSMutableAttributedString()
+        let emptyText = NSMutableAttributedString()
         if let image = UIImage(systemName:"magnifyingglass") {
             let attachment = NSTextAttachment()
             attachment.image = image
             attachment.bounds = CGRect(x: 0, y: -5, width: 20, height: 20)
-            string.append(NSAttributedString(attachment: attachment))
+            emptyText.append(NSAttributedString(attachment: attachment))
         }
-        string.append(NSAttributedString(string: "検索バーより検索してください"))
+        emptyText.append(NSAttributedString(string: "検索バーより検索してください"))
                       
-        label.attributedText = string
+        label.attributedText = emptyText
         label.textColor = .lightGray
         label.font = .systemFont(ofSize: 20, weight: .medium)
         return label
