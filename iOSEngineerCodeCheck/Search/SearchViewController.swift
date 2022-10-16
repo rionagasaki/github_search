@@ -8,7 +8,6 @@
 
 import UIKit
 import RxSwift
-import RxCocoa
 
 class SearchViewController: UITableViewController, UISearchBarDelegate {
     
@@ -54,13 +53,6 @@ class SearchViewController: UITableViewController, UISearchBarDelegate {
         SearchActionCreater.searchButtonClicked(word: searchText)
     }
     
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if segue.identifier == "Detail"{
-            // let dtl = segue.destination as! SearchResultViewController
-            // dtl.vc1 = self
-        }
-    }
-    
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return searchState?.search_results.count ?? 0
     }
@@ -77,7 +69,7 @@ class SearchViewController: UITableViewController, UISearchBarDelegate {
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
          // 画面遷移時に呼ばれる
                 let searchResultViewController = self.storyboard?.instantiateViewController(withIdentifier: "Detail") as! SearchResultViewController
-                searchResultViewController.repo = searchState?.search_results[indexPath.row]
+                searchResultViewController.searchItem = searchState?.search_results[indexPath.row]
                 self.present(searchResultViewController, animated: true, completion: nil)
     }
     

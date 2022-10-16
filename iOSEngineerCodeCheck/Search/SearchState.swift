@@ -9,18 +9,18 @@
 import Foundation
 import Dispatch
 
-struct SearchState {
+struct SearchState:Equatable {
     var search_words:String
     var search_results:[SearchItem]
     static var initial = SearchState(search_words: "", search_results: .init([]))
 }
 
 
-struct SearchResult: Decodable{
+public struct SearchResult: Codable{
     let items: [SearchItem]
 }
 
-struct SearchItem: Decodable{
+public struct SearchItem: Codable, Equatable{
     let fullName:String?
     let owner:Owner?
     let language:String?
@@ -30,6 +30,6 @@ struct SearchItem: Decodable{
     let openIssuesCount:Int?
 }
 
-struct Owner:Decodable{
+public struct Owner:Codable, Equatable{
     var avatarUrl:String?
 }

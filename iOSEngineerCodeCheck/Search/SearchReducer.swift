@@ -21,3 +21,4 @@ struct SearchReducer {
         return newState
     }
 }
+

@@ -7,43 +7,47 @@
 
 
 import UIKit
+import RxSwift
 
 class SearchResultViewController: UIViewController {
     
-    @IBOutlet weak var ImageView: UIImageView!
+    @IBOutlet weak var avatarImageView: UIImageView!
     
-    @IBOutlet weak var TtlLbl: UILabel!
+    @IBOutlet weak var userFullNameLabel: UILabel!
+    @IBOutlet weak var languageLabel: UILabel!
+    @IBOutlet weak var stargazersCountLabel: UILabel!
+    @IBOutlet weak var watchersCountLabel: UILabel!
+    @IBOutlet weak var forksCountLabel: UILabel!
+    @IBOutlet weak var openIssueCountLabel: UILabel!
     
-    @IBOutlet weak var LangLbl: UILabel!
+    private let disposeBag = DisposeBag()
+    var searchItem:SearchItem!
     
-    @IBOutlet weak var StrsLbl: UILabel!
-    @IBOutlet weak var WchsLbl: UILabel!
-    @IBOutlet weak var FrksLbl: UILabel!
-    @IBOutlet weak var IsssLbl: UILabel!
-    
-    var repo:SearchItem!
-        
     override func viewDidLoad() {
         super.viewDidLoad()
-        LangLbl.text = "Written in \(repo.language ?? "")"
-        StrsLbl.text = "\(repo.stargazersCount ?? 0) stars"
-        WchsLbl.text = "\(repo.watchersCount ?? 0) watchers"
-        FrksLbl.text = "\(repo.forksCount ?? 0) forks"
-        IsssLbl.text = "\(repo.openIssuesCount ?? 0) open issues"
+        languageLabel.text = "Written in \(searchItem.language ?? "")"
+        stargazersCountLabel.text = "\(searchItem.stargazersCount ?? 0) stars"
+        watchersCountLabel.text = "\(searchItem.watchersCount ?? 0) watchers"
+        forksCountLabel.text = "\(searchItem.forksCount ?? 0) forks"
+        openIssueCountLabel.text = "\(searchItem.openIssuesCount ?? 0) open issues"
         getImage()
     }
     
-    func getImage(){
-        TtlLbl.text = repo.fullName ?? ""
-        
-        if let owner = repo.owner{
-            if let imgURL = owner.avatarUrl {
-                URLSession.shared.dataTask(with: URL(string: imgURL)!) { (data, res, err) in
-                    let img = UIImage(data: data!)!
+    private func getImage(){
+        userFullNameLabel.text = searchItem.fullName ?? ""
+        if let owner = searchItem.owner{
+            if let avatarImageUrl = owner.avatarUrl {
+                guard let imageRequest = URL(string: avatarImageUrl) else { return }
+                URLSession.shared.rx.response(request: URLRequest(url: imageRequest)).subscribe(onNext: { response, data in
+                    let httpResponse = response as HTTPURLResponse
+                    if httpResponse.statusCode != 200 { return }
+                    let avatarImage = UIImage(data: data)
                     DispatchQueue.main.async {
-                        self.ImageView.image = img
+                        self.avatarImageView.image = avatarImage
                     }
-                }.resume()
+                }, onError: { error in
+                    print("ERROR\(error)")
+                }).disposed(by: disposeBag)
             }
         }
     }
