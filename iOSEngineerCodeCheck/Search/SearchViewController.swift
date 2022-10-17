@@ -8,7 +8,6 @@
 
 import UIKit
 import RxSwift
-import RxCocoa
 
 class SearchViewController: UITableViewController, UISearchBarDelegate {
     
@@ -54,13 +53,6 @@ class SearchViewController: UITableViewController, UISearchBarDelegate {
         SearchActionCreater.searchButtonClicked(word: searchText)
     }
     
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if segue.identifier == "Detail"{
-            // let dtl = segue.destination as! SearchResultViewController
-            // dtl.vc1 = self
-        }
-    }
-    
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return searchState?.search_results.count ?? 0
     }
@@ -77,22 +69,22 @@ class SearchViewController: UITableViewController, UISearchBarDelegate {
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
          // 画面遷移時に呼ばれる
                 let searchResultViewController = self.storyboard?.instantiateViewController(withIdentifier: "Detail") as! SearchResultViewController
-                searchResultViewController.repo = searchState?.search_results[indexPath.row]
+                searchResultViewController.searchItem = searchState?.search_results[indexPath.row]
                 self.present(searchResultViewController, animated: true, completion: nil)
     }
     
     private let emptyLabel:UILabel = {
         let label = UILabel()
-        let string = NSMutableAttributedString()
+        let emptyText = NSMutableAttributedString()
         if let image = UIImage(systemName:"magnifyingglass") {
             let attachment = NSTextAttachment()
             attachment.image = image
             attachment.bounds = CGRect(x: 0, y: -5, width: 20, height: 20)
-            string.append(NSAttributedString(attachment: attachment))
+            emptyText.append(NSAttributedString(attachment: attachment))
         }
-        string.append(NSAttributedString(string: "検索バーより検索してください"))
+        emptyText.append(NSAttributedString(string: "検索バーより検索してください"))
                       
-        label.attributedText = string
+        label.attributedText = emptyText
         label.textColor = .lightGray
         label.font = .systemFont(ofSize: 20, weight: .medium)
         return label
