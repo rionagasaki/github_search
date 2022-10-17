@@ -25,6 +25,7 @@ struct SearchActionCreater{
                 let httpResponse = response as HTTPURLResponse
                 if httpResponse.statusCode != 200 { return }
                 let decoder = JSONDecoder()
+                // JSON KeyがSnake_Caseの場合にcamelCaseに変更しマッピング
                 decoder.keyDecodingStrategy = .convertFromSnakeCase
                 let result = try? decoder.decode(SearchResult.self, from: data)
                 guard let result = result else { return }
