@@ -35,11 +35,13 @@ class SearchViewController: UITableViewController, UISearchBarDelegate {
             weakSelf.handle($0)
         }).disposed(by: disposeBag)
         
+        // インクリメンタルサーチを行う。
         apiSearchView.rx.text.orEmpty.distinctUntilChanged().subscribe(onNext:{ searchWord in
             SearchActionCreater.searchButtonClicked(word: searchWord)
         }).disposed(by: disposeBag)
     }
     
+    // ReducerによってStateが更新されると呼ばれる。
     private func handle(_ state:SearchState){
         self.searchState = state
         self.searchState?.search_results.count == 0 ? (emptyLabel.isHidden = false):(emptyLabel.isHidden = true)
@@ -67,7 +69,6 @@ class SearchViewController: UITableViewController, UISearchBarDelegate {
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-         // 画面遷移時に呼ばれる
                 let searchResultViewController = self.storyboard?.instantiateViewController(withIdentifier: "Detail") as! SearchResultViewController
                 searchResultViewController.searchItem = searchState?.search_results[indexPath.row]
                 self.present(searchResultViewController, animated: true, completion: nil)
